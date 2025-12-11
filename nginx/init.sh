@@ -94,25 +94,6 @@ server {
   proxy_set_header Host \$host;
   proxy_cache_bypass \$http_upgrade;
 
-  location /_next/static {
-    #proxy_cache STATIC;
-    proxy_pass http://frontend:3000;
-  }
-
-  location /static {
-    #proxy_cache STATIC;
-    proxy_ignore_headers Cache-Control;
-    proxy_cache_valid 60m;
-    proxy_pass http://frontend:3000;
-  }
-
-  location / {
-    if (\$limit = 0) {
-        set \$limit_req_zone "";
-    }
-    proxy_pass http://frontend:3000;
-  }
-
   location ~ ^/(admin|api|install|initiateInstallation) {
     if (\$limit = 0) {
         set \$limit_req_zone "";
