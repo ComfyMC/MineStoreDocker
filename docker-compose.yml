@@ -18,20 +18,20 @@ services:
     depends_on:
       - mariadb
       - nginx
-  frontend:
-    build: ./frontend
-    restart: always
-    volumes:
-      - ./minestore/site:/var/www/minestore
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
-    expose:
-      - 3000
-    depends_on:
-      - backend
+  # frontend:
+  #   build: ./frontend
+  #   restart: always
+  #   volumes:
+  #     - ./minestore/site:/var/www/minestore
+  #   logging:
+  #     driver: json-file
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+  #   expose:
+  #     - 3000
+  #   depends_on:
+  #     - backend
   nginx:
     build: ./nginx
     restart: always
