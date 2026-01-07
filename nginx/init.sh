@@ -138,7 +138,7 @@ server {
   client_max_body_size 64m;
 
   location / {
-     return 404;
+     try_files \$uri \$uri/ /index.php?\$query_string;
   }
   
   location ~ \.php$ {
