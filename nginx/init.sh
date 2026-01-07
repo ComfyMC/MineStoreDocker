@@ -94,6 +94,14 @@ server {
   proxy_set_header Host \$host;
   proxy_cache_bypass \$http_upgrade;
 
+  location = /success {
+      return 301 https://www.comfymc.it/store/success;
+  }
+
+  location = /error {
+      return 301 https://www.comfymc.it/store/error;
+  }
+
   location ~ ^/(admin|api|install|initiateInstallation) {
     if (\$limit = 0) {
         set \$limit_req_zone "";
