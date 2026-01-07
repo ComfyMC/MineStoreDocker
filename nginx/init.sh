@@ -87,6 +87,15 @@ server {
   index index.php;
   server_name $minestoreDomain;
   client_max_body_size 64m;
+  
+  # REDIRECT MIRATO
+  location = /success {
+      return 301 https://www.comfymc.it/store/success;
+  }
+
+  location = /error {
+      return 301 https://www.comfymc.it/store/error;
+  }
 
   proxy_http_version 1.1;
   proxy_set_header Upgrade \$http_upgrade;
