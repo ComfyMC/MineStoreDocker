@@ -70,13 +70,13 @@ install_packages() {
 apt update -y
 
 cat >/etc/nginx/conf.d/default.conf <<EOF
-geo $limit {
+geo \$limit {
    default 1;
    127.0.0.1 0;
    ::1 0;
 }
 
-limit_req_zone $binary_remote_addr zone=one:40m rate=180r/m;
+limit_req_zone \$binary_remote_addr zone=one:40m rate=180r/m;
 limit_req zone=one burst=86 nodelay;
 limit_req_log_level warn;
 limit_req_status 429;
