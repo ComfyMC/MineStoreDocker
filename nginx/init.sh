@@ -123,6 +123,14 @@ server {
   server_name $minestoreDomain;
   client_max_body_size 64m;
 
+    location = /success {
+      return 301 https://www.comfymc.it/store/success;
+  }
+
+  location = /error {
+      return 301 https://www.comfymc.it/store/error;
+  }
+
   location / {
     try_files \$uri \$uri/ /index.php?\$query_string;
   }
