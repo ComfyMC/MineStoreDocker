@@ -124,7 +124,7 @@ server {
   client_max_body_size 64m;
 
   location / {
-    try_files \$uri \$uri/ /index.php?\$query_string;
+    return 301 https://www.comfymc.it/store$request_uri;
   }
   
   location ~ \.php$ {
