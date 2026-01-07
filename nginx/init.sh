@@ -70,61 +70,45 @@ install_packages() {
 apt update -y
 
 cat >/etc/nginx/conf.d/default.conf <<EOF
-geo \$limit {
+geo $limit {
    default 1;
    127.0.0.1 0;
    ::1 0;
 }
 
-limit_req_zone \$binary_remote_addr zone=one:40m rate=180r/m;
+limit_req_zone $binary_remote_addr zone=one:40m rate=180r/m;
 limit_req zone=one burst=86 nodelay;
 limit_req_log_level warn;
 limit_req_status 429;
 
 server {
   resolver 8.8.8.8 valid=300s;
-  root $minestorePath/public;
-  index index.php;
   server_name $minestoreDomain;
   client_max_body_size 64m;
-  
-  
-location = /success {
-    return 301 https://www.comfymc.it/store/success;
-}
-
-location = /error {
-    return 301 https://www.comfymc.it/store/error;
-}
-
-location = /payment {
-    return 301 https://www.comfymc.it/store/payment;
-}
-
 
   proxy_http_version 1.1;
-  proxy_set_header Upgrade \$http_upgrade;
+  proxy_set_header Upgrade $http_upgrade;
   proxy_set_header Connection 'upgrade';
-  proxy_set_header Host \$host;
-  proxy_cache_bypass \$http_upgrade;
+  proxy_set_header Host $host;
+  proxy_cache_bypass $http_upgrade;
 
   location ~ ^/(admin|api|install|initiateInstallation) {
-    if (\$limit = 0) {
-        set \$limit_req_zone "";
-    }
+    if ($limit = 0) { set $limit_req_zone ""; }
     proxy_pass http://127.0.0.1:8090;
-    proxy_set_header Host \$host;
-    proxy_set_header X-Real-IP \$remote_addr;
-    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto \$scheme;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
   }
 
   location ~ ^/(assets|css|flags|fonts|img|js|libs|res|scss|style)/ {
     proxy_pass http://127.0.0.1:8090;
-    proxy_set_header Host \$host;
-    proxy_set_header X-Real-IP \$remote_addr;
-    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto \$scheme;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  location / {
+    return 301 https://www.comfymc.it/store$request_uri;
   }
 }
 
@@ -138,18 +122,16 @@ server {
   client_max_body_size 64m;
 
   location / {
-     try_files \$uri \$uri/ /index.php?\$query_string;
+    try_files $uri $uri/ /index.php?$query_string;
   }
-  
+
   location ~ \.php$ {
-    if (\$limit = 0) {
-        set \$limit_req_zone "";
-    }
-    try_files \$uri =404;
+    if ($limit = 0) { set $limit_req_zone ""; }
+    try_files $uri =404;
     fastcgi_split_path_info ^(.+\.php)(.*)$;
     fastcgi_pass backend:9000;
     fastcgi_index index.php;
-    fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
     include fastcgi_params;
   }
 }
