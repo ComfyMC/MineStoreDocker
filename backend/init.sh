@@ -169,6 +169,12 @@ configure_server() {
     export COMPOSER_ALLOW_SUPERUSER=1
     php /usr/local/bin/composer install
 
+    chown -R www-data:www-data /var/www/minestore/storage
+    chown -R www-data:www-data /var/www/minestore/bootstrap/cache
+    chmod -R 775 /var/www/minestore/storage
+    chmod -R 775 /var/www/minestore/bootstrap/cache
+    success "Set permissions for storage and cache directories."
+
     #sudo certbot --$webserverUse
 
     php artisan cache:clear
