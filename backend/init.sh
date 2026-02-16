@@ -124,7 +124,7 @@ configure_server() {
     rm -rf .env.temp
     success "Configured APP_URL."
 
-    sed "s,^DB_HOST=.*\$,DB_HOST=mariadb," .env >.env.temp
+    sed "s,^DB_HOST=.*\$,DB_HOST=$MYSQL_HOST," .env >.env.temp
     mv -f .env.temp .env
     rm -rf .env.temp
     success "Configured database host."
